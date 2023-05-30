@@ -30,11 +30,17 @@ var db *sql.DB
 
 func init() {
 	// ①-1
-	// DB接続のための準備
+	// DB接続のための準備,ローカルで実行するとき用
 	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlPwd := os.Getenv("MYSQL_PWD")
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
+	fmt.Println(mysqlUser)
+
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	fmt.Printf("読み込みできませんでした：%v", err)
+	//}
 
 	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
 	_db, err := sql.Open("mysql", connStr)
