@@ -2,7 +2,9 @@ package main
 
 import (
 	"crypto/rand"
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/oklog/ulid/v2"
 	"log"
@@ -22,6 +24,28 @@ type UserResForHTTPGet struct {
 type UserResForHTTPPost struct {
 	Name string `json:"name"`
 	Age  int    `json:"age"`
+}
+
+var db *sql.DB
+
+func init() {
+	// ①-1
+	// DB接続のための準備
+	mysqlUser := os.Getenv("MYSQL_USER")
+	mysqlPwd := os.Getenv("MYSQL_PWD")
+	mysqlHost := os.Getenv("MYSQL_HOST")
+	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
+
+	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
+	_db, err := sql.Open("mysql", connStr)
+	if err != nil {
+		log.Fatalf("fail: sql.Open, %v\n", err)
+	}
+	// ①-3
+	if err := _db.Ping(); err != nil {
+		log.Fatalf("fail: _db.Ping, %v\n", err)
+	}
+	db = _db
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
