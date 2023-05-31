@@ -11,7 +11,7 @@ import (
 	"syscall"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func userHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Access-Control-Allow-Methods", "*")
@@ -33,8 +33,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// ② /userでリクエストされたら全てのレコードをJSON形式で返す
-	http.HandleFunc("/user", handler)
+	// /userでsign upまたはsigh inのどちらかのリクエストを受け取る
+	http.HandleFunc("/user", userHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()

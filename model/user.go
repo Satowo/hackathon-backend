@@ -13,8 +13,8 @@ type User struct {
 type AppUser struct {
 	UserId   string
 	UserName string
-	email    string
-	Age      int
+	Email    string
+	Password string
 }
 
 type Channel struct {
