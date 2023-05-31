@@ -9,8 +9,9 @@ import (
 )
 
 type UserResForHTTPPost struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+	UserName string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func UserRegisterController(w http.ResponseWriter, r *http.Request) {
@@ -24,39 +25,25 @@ func UserRegisterController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Nameが空文字か50字以上、Ageが81歳以上19歳以下の時エラーコード400を返す
-	if data.Name == "" || utf8.RuneCountInString(data.Name) > 50 || data.Age < 20 || data.Age > 80 {
-		log.Printf("fail: invalidinput, %v\n", err)
+	if data.UserName == "" || utf8.RuneCountInString(data.UserName) > 10 ||
+		data.Email == "" || utf8.RuneCountInString(data.Email) > 30 ||
+		data.Password == "" || utf8.RuneCountInString(data.Password) > 20 {
+		log.Printf("fail: invalidinput")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	//受け取ったデータをキーごとに取り出す
-	name := data.Name
-	age := data.Age
+	name := data.UserName
+	email := data.Email
+	pwd := data.Password
 
 	// データをデータベースに挿入しそれを含んだ全userのnameとageを返す
-	users, err := usecase.UserRegisterUseCase(name, age)
+	err = usecase.UserRegisterUseCase(name, email, pwd)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
-	////レスポンス用のUserResForHTTPPostのリスト型に変換
-	usersRes := make([]UserResForHTTPPost, 0)
-	for _, u := range users {
-		usersRes = append(usersRes, UserResForHTTPPost{
-			Name: u.Name,
-			Age:  u.Age,
-		})
-	}
-
-	// 変換したユーザーデータリストをjson形式に変換
-	jsonResp, err := json.Marshal(usersRes)
-	if err != nil {
-		log.Printf("fail: json.Marshal, %v\n", err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
 	w.WriteHeader(http.StatusOK)
-	w.Write(jsonResp)
 }
