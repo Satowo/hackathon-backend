@@ -24,6 +24,8 @@ type UserResForHTTPPost struct {
 	Age  int    `json:"age"`
 }
 
+//ローカルブランチをリモートに反映させる用の変更
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
