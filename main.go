@@ -32,9 +32,30 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func channelHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Access-Control-Allow-Methods", "*")
+	w.Header().Set("Content-Type", "application/json")
+	switch r.Method {
+	case http.MethodOptions:
+		w.Header()
+	case http.MethodGet:
+		controller.ChannelSearchController(w, r)
+
+	//case http.MethodPost:
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
 func main() {
 	// /userでsign upまたはsigh inのどちらかのリクエストを受け取る
 	http.HandleFunc("/user", userHandler)
+	http.HandleFunc("/channel", channelHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()
