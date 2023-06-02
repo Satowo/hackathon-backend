@@ -5,7 +5,7 @@ import (
 	"hackathon-backend/model"
 )
 
-func UserSearchUseCase() ([]model.User, error) {
+func UserSearchUseCase() ([]model.AppUser, error) {
 	users, err := dao.UserSearchDao()
 	return users, err
 }

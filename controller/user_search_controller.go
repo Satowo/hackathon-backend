@@ -8,9 +8,10 @@ import (
 )
 
 type UserResForHTTPGet struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"pwd"`
 }
 
 func UserSearchController(w http.ResponseWriter) {
@@ -24,9 +25,10 @@ func UserSearchController(w http.ResponseWriter) {
 	usersRes := make([]UserResForHTTPGet, 0)
 	for _, u := range users {
 		usersRes = append(usersRes, UserResForHTTPGet{
-			Id:   u.Id,
-			Name: u.Name,
-			Age:  u.Age,
+			Id:       u.UserId,
+			Name:     u.UserName,
+			Email:    u.Email,
+			Password: u.Password,
 		})
 	}
 

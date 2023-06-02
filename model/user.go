@@ -2,11 +2,11 @@ package model
 
 //動作確認用
 
-type User struct {
+/*type User struct {
 	Id   string
 	Name string
 	Age  int
-}
+}*/
 
 //以下ハッカソン用
 

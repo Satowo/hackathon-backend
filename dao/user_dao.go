@@ -6,17 +6,17 @@ import (
 	"log"
 )
 
-func UserSearchDao() ([]model.User, error) {
-	rows, err := db.Query("SELECT * FROM user")
+func UserSearchDao() ([]model.AppUser, error) {
+	rows, err := db.Query("SELECT * FROM app_user")
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
 		return nil, err
 	}
 
-	users := make([]model.User, 0)
+	users := make([]model.AppUser, 0)
 	for rows.Next() {
-		var u model.User
-		if err := rows.Scan(&u.Id, &u.Name, &u.Age); err != nil {
+		var u model.AppUser
+		if err := rows.Scan(&u.UserId, &u.UserName, &u.Email, &u.Password); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 
 			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
