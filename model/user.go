@@ -17,18 +17,6 @@ type AppUser struct {
 	Password string
 }
 
-type ChannelMember struct {
-	ChannelMemberId string
-	ChannelId       string
-	UserId          string
-}
-
-type Message struct {
-	MessageId      string
-	UserId         string
-	MessageContent string
-}
-
 type Reply struct {
 	ReplyId      string
 	MessageId    string
