@@ -11,11 +11,16 @@ import (
 	"syscall"
 )
 
-/*func userHandler(w http.ResponseWriter, r *http.Request) {
+func headerSet(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Access-Control-Allow-Methods", "*")
 	w.Header().Set("Content-Type", "application/json")
+	return
+}
+
+func userHandler(w http.ResponseWriter, r *http.Request) {
+	headerSet(w)
 	switch r.Method {
 	case http.MethodOptions:
 		w.Header()
@@ -33,10 +38,7 @@ import (
 }
 
 func channelHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "*")
-	w.Header().Set("Content-Type", "application/json")
+	headerSet(w)
 	switch r.Method {
 	case http.MethodOptions:
 		w.Header()
@@ -50,13 +52,10 @@ func channelHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-}*/
+}
 
 func channelMemberHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "*")
-	w.Header().Set("Content-Type", "application/json")
+	headerSet(w)
 	switch r.Method {
 	case http.MethodOptions:
 		w.Header()
@@ -73,15 +72,12 @@ func channelMemberHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func MessageHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Access-Control-Allow-Methods", "*")
-	w.Header().Set("Content-Type", "application/json")
+	headerSet(w)
 	switch r.Method {
 	case http.MethodOptions:
 		w.Header()
 	case http.MethodGet:
-		controller.MessageSearchController(w)
+		controller.MessageSearchController(w, r)
 
 	//case http.MethodPost:
 
@@ -97,7 +93,8 @@ func main() {
 	http.HandleFunc("/user", userHandler)
 	http.HandleFunc("/channel", channelHandler)
 	http.HandleFunc("/message", MessageHandler)
-  
+	http.HandleFunc("/channel_member", channelMemberHandler)
+
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()
 

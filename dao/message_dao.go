@@ -5,8 +5,8 @@ import (
 	"log"
 )
 
-func MessageSearchDao() ([]model.Message, error) {
-	rows, err := db.Query("SELECT * FROM message")
+func MessageSearchDao(channelId string) ([]model.Message, error) {
+	rows, err := db.Query("SELECT * FROM message WHERE channel_id = ?", channelId)
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
 		return nil, err
