@@ -5,7 +5,7 @@ import (
 	"hackathon-backend/model"
 )
 
-func MessageSearchUseCase() ([]model.Message, error) {
-	messages, err := dao.MessageSearchDao()
+func MessageSearchUseCase(channelId string) ([]model.Message, error) {
+	messages, err := dao.MessageSearchDao(channelId)
 	return messages, err
 }

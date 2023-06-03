@@ -14,8 +14,16 @@ type MessageResForHTTPGet struct {
 	MessageContent string `json:"message_content"`
 }
 
-func MessageSearchController(w http.ResponseWriter) {
-	messages, err := usecase.MessageSearchUseCase()
+func MessageSearchController(w http.ResponseWriter, r *http.Request) {
+	//クエリパラメータの文字列を取得、空文字の場合エラーコード400を返す
+	channelId := r.URL.Query().Get("channel_id")
+	if channelId == "" {
+		log.Println("fail: channel_id is empty")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	messages, err := usecase.MessageSearchUseCase(channelId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

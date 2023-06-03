@@ -18,7 +18,7 @@ func ChannelMemberSearchController(w http.ResponseWriter, r *http.Request) {
 	//クエリパラメータの文字列を取得、空文字の場合エラーコード400を返す
 	channelId := r.URL.Query().Get("channel_id")
 	if channelId == "" {
-		log.Println("fail: name is empty")
+		log.Println("fail: channel_id is empty")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
