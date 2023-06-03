@@ -6,3 +6,4 @@ type Message struct {
 	ChannelId      string
 	MessageContent string
 }
+
