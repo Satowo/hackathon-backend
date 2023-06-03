@@ -52,7 +52,7 @@ func channelHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func messageHandler(w http.ResponseWriter, r *http.Request) {
+func MessageHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Access-Control-Allow-Methods", "*")
@@ -61,7 +61,7 @@ func messageHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodOptions:
 		w.Header()
 	case http.MethodGet:
-		controller.MessageSearchController(w, r)
+		controller.MessageSearchController(w)
 
 	//case http.MethodPost:
 
@@ -76,7 +76,7 @@ func main() {
 	// /userでsign upまたはsigh inのどちらかのリクエストを受け取る
 	http.HandleFunc("/user", userHandler)
 	http.HandleFunc("/channel", channelHandler)
-	http.HandleFunc("/message", messageHandler)
+	http.HandleFunc("/message", MessageHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()

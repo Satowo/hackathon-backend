@@ -23,12 +23,6 @@ type ChannelMember struct {
 	UserId          string
 }
 
-type Message struct {
-	MessageId      string
-	UserId         string
-	MessageContent string
-}
-
 type Reply struct {
 	ReplyId      string
 	MessageId    string
