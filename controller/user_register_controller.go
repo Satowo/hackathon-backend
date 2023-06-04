@@ -9,7 +9,7 @@ import (
 )
 
 type UserResForHTTPPost struct {
-	UserName string `json:"username"`
+	UserName string `json:"user_name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
