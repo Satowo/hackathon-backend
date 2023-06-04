@@ -6,13 +6,9 @@ FROM golang:1.18 as build
 WORKDIR /app
 
 # /appにgo.modをコピーしgo modをダウンロード
-COPY go.mod ./ 
-COPY go.sum ./
+COPY . .
 
-RUN go mod download 
-
-# コンテナ内にソースコードをコピー
-COPY . ./
+RUN go mod download
 
 # go modのダウンロード、Goアプリのビルド
 RUN go build -v main.go
