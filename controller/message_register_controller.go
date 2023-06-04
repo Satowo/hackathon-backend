@@ -1,5 +1,7 @@
 package controller
 
+/*
+
 import (
 	"encoding/json"
 	"hackathon-backend/usecase"
@@ -58,3 +60,4 @@ func MessageRegisterController(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+*/
