@@ -12,7 +12,7 @@ COPY go.sum ./
 RUN go mod download 
 
 # コンテナ内にソースコードをコピー
-COPY *.go ./
+COPY . ./
 
 # go modのダウンロード、Goアプリのビルド
 RUN go build -v main.go
