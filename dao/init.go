@@ -40,7 +40,7 @@ func init() {
 		log.Fatalf("fail: sql.Open, %v\n", err)
 	}
 
-	/
+	//
 	if err := _db.Ping(); err != nil {
 		log.Fatalf("fail: _db.Ping, %v\n", err)
 	}
