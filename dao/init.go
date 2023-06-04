@@ -12,7 +12,7 @@ var db *sql.DB
 func init() {
 	// DB接続のため環境変数を取得(本番環境用）
 	mysqlUser := os.Getenv("MYSQL_USER")
-	mysqlPwd := os.Getenv("MYSQL_PASSWORD")
+	mysqlPwd := os.Getenv("MYSQL_PWD")
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
