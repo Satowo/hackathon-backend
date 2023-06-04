@@ -16,13 +16,13 @@ func init() {
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
-	/*// DB接続のため環境変数を取得（開発環境用）
-	err := godotenv.Load("../database/.env")
+	// DB接続のため環境変数を取得（開発環境用）
+	/*err := godotenv.Load("../database/.env")
 	if err != nil {
 		fmt.Printf("読み込みできませんでした：%v", err)
-	}*/
+	}
 
-	/*mysqlUser := os.Getenv("MYSQL_USER")
+	mysqlUser := os.Getenv("MYSQL_USER")
 	mysqlPwd := os.Getenv("MYSQL_PASSWORD")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")*/
 
