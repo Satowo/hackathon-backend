@@ -53,3 +53,28 @@ func MessageRegisterDao(messageId string, userId string, channelId string, messa
 
 	return messages, nil
 }
+
+func MessageEditDao(messageId string, channelId string, messageContent string) ([]model.Message, error) {
+	// データを編集する枠を作る
+	stmt, err := db.Prepare("UPDATE message SET messageContent = ?, edited = 1 WHERE messageId = ?")
+	if err != nil {
+		log.Printf("fail: db.Prepare (Stmt), %v\n", err)
+		return nil, err
+	}
+	defer stmt.Close()
+
+	// データをデータベースに挿入
+	_, err = stmt.Exec(messageContent, messageId)
+	if err != nil {
+		log.Printf("fail: stmt.Exec, %v\n", err)
+		return nil, err
+	}
+
+	messages, err := MessageSearchDao(channelId)
+	if err != nil {
+		log.Printf("fail: MessageSearchDao, %v\n", err)
+		return nil, err
+	}
+
+	return messages, nil
+}

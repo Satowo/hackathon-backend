@@ -8,24 +8,15 @@ import (
 	"unicode/utf8"
 )
 
-type MessageRequestForHTTPPost struct {
-	UserId         string `json:"userId"`
-	ChannelId      string `json:"channelId"`
-	MessageContent string `json:"messageContent"`
-}
-
-type MessageResForHTTPPost struct {
+type MessageEditRequestForHTTPPost struct {
 	MessageId      string `json:"messageId"`
-	UserId         string `json:"userId"`
-	UserName       string `json:"userName"`
 	ChannelId      string `json:"channelId"`
 	MessageContent string `json:"messageContent"`
-	Edited         bool   `json:"edited"`
 }
 
-func MessageRegisterController(w http.ResponseWriter, r *http.Request) {
+func MessageEditController(w http.ResponseWriter, r *http.Request) {
 	// リクエストのボディを読み込み
-	var data MessageRequestForHTTPPost
+	var data MessageEditRequestForHTTPPost
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		log.Printf("fail: json.NewDecoder(r.Body).Decode, %v\n", err)
@@ -41,12 +32,12 @@ func MessageRegisterController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//受け取ったデータをキーごとに取り出す
-	userId := data.UserId
-	channelId := data.ChannelId
+	messageId := data.MessageId
 	messageContent := data.MessageContent
+	channelId := data.ChannelId
 
-	// データをデータベースに挿入しそれを含んだチャンネル内のmessageContent,userName,editedを返す。
-	messages, err := usecase.MessageRegisterUseCase(userId, channelId, messageContent)
+	// データベースのmessageContentとeditedを更新しそれを含んだチャンネル内の全メッセージの情報を返す。
+	messages, err := usecase.MessageEditUseCase(messageId, channelId, messageContent)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
