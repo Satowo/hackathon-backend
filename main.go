@@ -90,11 +90,30 @@ func MessageHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func MessageEditHandler(w http.ResponseWriter, r *http.Request) {
+	headerSet(w)
+	switch r.Method {
+	case http.MethodOptions:
+		w.Header()
+
+	/*case http.MethodGet:*/
+
+	case http.MethodPost:
+		controller.MessageEditController(w, r)
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
 func main() {
 	// /userでsign upまたはsigh inのどちらかのリクエストを受け取る
 	http.HandleFunc("/user", userHandler)
 	http.HandleFunc("/channel", channelHandler)
 	http.HandleFunc("/message", MessageHandler)
+	http.HandleFunc("/message_edit", MessageEditHandler)
 	http.HandleFunc("/channel_member", channelMemberHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
