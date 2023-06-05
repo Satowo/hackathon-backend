@@ -9,7 +9,7 @@ import (
 
 type MessageResForHTTPGet struct {
 	MessageId      string `json:"message_id"`
-	UserId         string `json:"user_id"`
+	UserName       string `json:"user_name"`
 	ChannelId      string `json:"channel_id"`
 	MessageContent string `json:"message_content"`
 	Edited         bool   `json:"edited"`
@@ -35,7 +35,7 @@ func MessageSearchController(w http.ResponseWriter, r *http.Request) {
 	for _, u := range messages {
 		messagesRes = append(messagesRes, MessageResForHTTPGet{
 			MessageId:      u.MessageId,
-			UserId:         u.UserId,
+			UserName:       u.UserName,
 			ChannelId:      u.ChannelId,
 			MessageContent: u.MessageContent,
 			Edited:         u.Edited,
@@ -49,6 +49,5 @@ func MessageSearchController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	/*w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")*/
 	w.Write(bytes)
 }
