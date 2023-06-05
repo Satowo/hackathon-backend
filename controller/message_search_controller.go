@@ -17,7 +17,7 @@ type MessageResForHTTPGet struct {
 
 func MessageSearchController(w http.ResponseWriter, r *http.Request) {
 	//クエリパラメータの文字列を取得、空文字の場合エラーコード400を返す
-	channelId := r.URL.Query().Get("channel_id")
+	channelId := r.URL.Query().Get("channelId")
 	if channelId == "" {
 		log.Println("fail: channel_id is empty")
 		w.WriteHeader(http.StatusBadRequest)
@@ -48,6 +48,7 @@ func MessageSearchController(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(bytes)
 }
