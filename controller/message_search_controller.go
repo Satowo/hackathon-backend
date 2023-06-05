@@ -12,6 +12,7 @@ type MessageResForHTTPGet struct {
 	UserId         string `json:"user_id"`
 	ChannelId      string `json:"channel_id"`
 	MessageContent string `json:"message_content"`
+	Edited         bool   `json:"edited"`
 }
 
 func MessageSearchController(w http.ResponseWriter, r *http.Request) {
@@ -37,6 +38,7 @@ func MessageSearchController(w http.ResponseWriter, r *http.Request) {
 			UserId:         u.UserId,
 			ChannelId:      u.ChannelId,
 			MessageContent: u.MessageContent,
+			Edited:         u.Edited,
 		})
 	}
 
@@ -47,6 +49,6 @@ func MessageSearchController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	/*w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")*/
 	w.Write(bytes)
 }

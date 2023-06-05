@@ -5,5 +5,5 @@ type Message struct {
 	UserId         string
 	ChannelId      string
 	MessageContent string
+	Edited         bool
 }
-
