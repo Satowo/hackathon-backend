@@ -32,9 +32,9 @@ func init() {
 	fmt.Println("database:", mysqlDatabase)
 
 	//本番環境用
-	/*connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)*/
+	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
 	//開発環境用
-	connStr := fmt.Sprintf("%s:%s@(localhost:3308)/%s", mysqlUser, mysqlPwd, mysqlDatabase)
+	/*connStr := fmt.Sprintf("%s:%s@(localhost:3308)/%s", mysqlUser, mysqlPwd, mysqlDatabase)*/
 	_db, err := sql.Open("mysql", connStr)
 	if err != nil {
 		log.Fatalf("fail: sql.Open, %v\n", err)
