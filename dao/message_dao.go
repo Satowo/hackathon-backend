@@ -6,7 +6,7 @@ import (
 )
 
 func MessageSearchDao(channelId string) ([]model.Message, error) {
-	rows, err := db.Query("SELECT * FROM message WHERE channel_id = ?", channelId)
+	rows, err := db.Query("SELECT message_id, user_id, channel_id, message_content, edited FROM message WHERE channel_id = ?", channelId)
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
 		return nil, err
@@ -15,7 +15,7 @@ func MessageSearchDao(channelId string) ([]model.Message, error) {
 	messages := make([]model.Message, 0)
 	for rows.Next() {
 		var u model.Message
-		if err := rows.Scan(&u.MessageId, &u.UserId, &u.ChannelId, &u.MessageContent); err != nil {
+		if err := rows.Scan(&u.MessageId, &u.UserId, &u.ChannelId, &u.MessageContent, &u.Edited); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 
 			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
