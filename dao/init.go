@@ -46,3 +46,9 @@ func init() {
 	}
 	db = _db
 }
+
+func DataBaseClose() error {
+	//DBを閉じる
+	err := db.Close()
+	return err
+}

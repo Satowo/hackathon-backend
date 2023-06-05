@@ -1,7 +1,5 @@
 package controller
 
-/*
-
 import (
 	"encoding/json"
 	"hackathon-backend/usecase"
@@ -10,30 +8,24 @@ import (
 	"unicode/utf8"
 )
 
-type MessageResForHTTPPost struct {
-	UserId         string `json:"user_id"`
-	ChannelId      string `json:"channel_id"`
-	MessageContent string `json:"message_content"`
+type MessageRequestForHTTPPost struct {
+	UserId         string `json:"userId"`
+	ChannelId      string `json:"channelId"`
+	MessageContent string `json:"messageContent"`
 }
 
-type Message struct {
-	MessageId      string
-	UserId         string
-	ChannelId      string
-	MessageContent string
+type MessageResForHTTPPost struct {
+	MessageId      string `json:"messageId"`
+	UserId         string `json:"userId"`
+	UserName       string `json:"userName"`
+	ChannelId      string `json:"channelId"`
+	MessageContent string `json:"messageContent"`
+	Edited         bool   `json:"edited"`
 }
 
 func MessageRegisterController(w http.ResponseWriter, r *http.Request) {
-	//クエリパラメータの文字列を取得、空文字の場合エラーコード400を返す
-	userId := r.URL.Query().Get("user_id")
-	if userId == "" {
-		log.Println("fail: userId is empty")
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
 	// リクエストのボディを読み込み
-	var data MessageResForHTTPPost
+	var data MessageRequestForHTTPPost
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		log.Printf("fail: json.NewDecoder(r.Body).Decode, %v\n", err)
@@ -41,7 +33,7 @@ func MessageRegisterController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//Nameが空文字か50字以上、Ageが81歳以上19歳以下の時エラーコード400を返す
+	//MessageContentが空文字か500字以上の時エラーコード400を返す
 	if data.MessageContent == "" || utf8.RuneCountInString(data.MessageContent) > 500 {
 		log.Printf("fail: invalidinput")
 		w.WriteHeader(http.StatusBadRequest)
@@ -49,15 +41,38 @@ func MessageRegisterController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//受け取ったデータをキーごとに取り出す
+	userId := data.UserId
+	channelId := data.ChannelId
 	messageContent := data.MessageContent
 
-	// データをデータベースに挿入しそれを含んだ全userのnameとageを返す
-	err = usecase.UserRegisterUseCase(userId, channelId, messageContent)
+	// データをデータベースに挿入しそれを含んだチャンネル内のmessageContent,userName,editedを返す。
+	messages, err := usecase.MessageRegisterUseCase(userId, channelId, messageContent)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 
+	//レスポンス用のMessageResForHTTPPostのリスト型に変換
+	messagesRes := make([]MessageResForHTTPPost, 0)
+	for _, u := range messages {
+		messagesRes = append(messagesRes, MessageResForHTTPPost{
+			MessageId:      u.UserId,
+			UserId:         u.UserId,
+			UserName:       u.UserName,
+			ChannelId:      u.ChannelId,
+			MessageContent: u.MessageContent,
+			Edited:         u.Edited,
+		})
+	}
+
+	bytes, err := json.Marshal(messagesRes)
+	if err != nil {
+		log.Printf("fail: json.Marshal, %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(bytes)
 }
-*/

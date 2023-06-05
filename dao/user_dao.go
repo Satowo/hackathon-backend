@@ -7,7 +7,7 @@ import (
 )
 
 func UserSearchDao() ([]model.AppUser, error) {
-	rows, err := db.Query("SELECT * FROM app_user")
+	rows, err := db.Query("SELECT * FROM appUser")
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
 		return nil, err
@@ -31,7 +31,7 @@ func UserSearchDao() ([]model.AppUser, error) {
 }
 
 func UserRegisterDao(id string, name string, email string, pwd string) error {
-	duplicateCheckStmt, err := db.Prepare("SELECT COUNT(*) FROM app_user WHERE user_id = ? OR user_name = ? OR email = ? OR password = ?")
+	duplicateCheckStmt, err := db.Prepare("SELECT COUNT(*) FROM appUser WHERE userId = ? OR userName = ? OR email = ? OR password = ?")
 	if err != nil {
 		log.Printf("fail: db.Prepare (duplicateCheckStmt), %v\n", err)
 		return err
@@ -51,7 +51,7 @@ func UserRegisterDao(id string, name string, email string, pwd string) error {
 	}
 
 	// データがテーブルの構造に一致しているか確認
-	stmt, err := db.Prepare("INSERT INTO app_user (user_id, user_name, email, password) VALUES (?, ?, ?, ?)")
+	stmt, err := db.Prepare("INSERT INTO appUser (user_id, user_name, email, password) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		log.Printf("fail: db.Prepare (Stmt), %v\n", err)
 		return err
@@ -66,10 +66,4 @@ func UserRegisterDao(id string, name string, email string, pwd string) error {
 	}
 
 	return nil
-}
-
-func DataBaseClose() error {
-	//DBを閉じる
-	err := db.Close()
-	return err
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func MessageSearchDao(channelId string) ([]model.Message, error) {
-	rows, err := db.Query("SELECT message_id, app_user.user_id, user_name, channel_id, message_content, edited FROM message INNER JOIN app_user ON message.user_id = app_user.user_id WHERE channel_id = ?", channelId)
+	rows, err := db.Query("SELECT messageId, appUser.userId, userName, channelId, messageContent, edited FROM message INNER JOIN appUser ON message.userId = appUser.userId WHERE channelId = ?", channelId)
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
 		return nil, err
@@ -24,6 +24,31 @@ func MessageSearchDao(channelId string) ([]model.Message, error) {
 			return nil, err
 		}
 		messages = append(messages, u)
+	}
+
+	return messages, nil
+}
+
+func MessageRegisterDao(messageId string, userId string, channelId string, messageContent string) ([]model.Message, error) {
+	// データがテーブルの構造に一致しているか確認
+	stmt, err := db.Prepare("INSERT INTO message (messageId, userId, channelId, messageContent) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		log.Printf("fail: db.Prepare (Stmt), %v\n", err)
+		return nil, err
+	}
+	defer stmt.Close()
+
+	// データをデータベースに挿入
+	_, err = stmt.Exec(messageId, userId, channelId, messageContent)
+	if err != nil {
+		log.Printf("fail: stmt.Exec, %v\n", err)
+		return nil, err
+	}
+
+	messages, err := MessageSearchDao(channelId)
+	if err != nil {
+		log.Printf("fail: MessageSearchDao, %v\n", err)
+		return nil, err
 	}
 
 	return messages, nil

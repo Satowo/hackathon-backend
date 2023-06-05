@@ -80,7 +80,8 @@ func MessageHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		controller.MessageSearchController(w, r)
 
-	//case http.MethodPost:
+	case http.MethodPost:
+		controller.MessageRegisterController(w, r)
 
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
