@@ -14,27 +14,34 @@ func UserInfoDao(email string) (model.UserInfo, error) {
 		return userInfo, err
 	}
 
-	rows, err := db.Query("SELECT channelId FROM channelMember INNER JOIN appUser ON channelMember.userId = appUser.userId WHERE email = ?", email)
+	// 最初のクエリを実行して複数の channelId を取得
+	rows, err := db.Query("SELECT channelId FROM channelMember INNER JOIN appUser ON channelMember.userId = appUser.userId WHERE appUser.email = ?", "satoshi@gmail.com")
 	if err != nil {
-		log.Printf("fail: db.Query, %v\n", err)
-		return userInfo, err
+		log.Fatal(err)
 	}
+	defer rows.Close()
 
-	var channels []string
+	var channelsName []string
 	for rows.Next() {
-		var u string
-		if err := rows.Scan(&u); err != nil {
+		var channelId string
+		err := rows.Scan(&channelId)
+		if err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
-
-			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
-				log.Printf("fail: rows.Close(), %v\n", err)
-			}
 			return userInfo, err
 		}
-		channels = append(channels, u)
+
+		// 2番目のクエリを実行して channelId に対応する channelName を取得
+		var channelName string
+		err = db.QueryRow("SELECT channelName FROM channel WHERE channelId = ?", channelId).Scan(&channelName)
+		if err != nil {
+			log.Printf("fail: db.QueryRow, %v\n", err)
+			return userInfo, err
+		}
+
+		channelsName = append(channelsName, channelName)
 	}
 
-	userInfo.InChannels = channels
+	userInfo.InChannels = channelsName
 	userInfo.Email = email
 
 	return userInfo, nil
