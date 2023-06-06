@@ -8,10 +8,10 @@ import (
 )
 
 type MessageResForHTTPGet struct {
-	MessageId      string `json:"message_id"`
-	UserName       string `json:"user_name"`
-	ChannelId      string `json:"channel_id"`
-	MessageContent string `json:"message_content"`
+	MessageId      string `json:"messageId"`
+	UserName       string `json:"userName"`
+	ChannelId      string `json:"channelId"`
+	MessageContent string `json:"messageContent"`
 	Edited         bool   `json:"edited"`
 }
 
@@ -19,7 +19,7 @@ func MessageSearchController(w http.ResponseWriter, r *http.Request) {
 	//クエリパラメータの文字列を取得、空文字の場合エラーコード400を返す
 	channelId := r.URL.Query().Get("channelId")
 	if channelId == "" {
-		log.Println("fail: channel_id is empty")
+		log.Println("fail: channelId is empty")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
