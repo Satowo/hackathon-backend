@@ -8,10 +8,10 @@ import (
 )
 
 type UserResForHTTPGet struct {
-	UserId   string `json:"id"`
-	UserName string `json:"name"`
+	UserId   string `json:"userId"`
+	UserName string `json:"userName"`
 	Email    string `json:"email"`
-	Password string `json:"pwd"`
+	Password string `json:"password"`
 }
 
 func UserSearchController(w http.ResponseWriter) {
