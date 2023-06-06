@@ -36,10 +36,10 @@ func UserRegisterController(w http.ResponseWriter, r *http.Request) {
 	//受け取ったデータをキーごとに取り出す
 	name := data.UserName
 	email := data.Email
-	pwd := data.Password
+	password := data.Password
 
 	// データをデータベースに挿入しそれを含んだ全userのnameとageを返す
-	err = usecase.UserRegisterUseCase(name, email, pwd)
+	err = usecase.UserRegisterUseCase(name, email, password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
