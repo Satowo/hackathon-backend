@@ -8,8 +8,8 @@ import (
 )
 
 type Channel struct {
-	ChannelId   string
-	ChannelName string
+	ChannelId   string `json:"channelId"`
+	ChannelName string `json:"channelName"`
 }
 
 type UserInfoResForHTTPGet struct {
