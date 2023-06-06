@@ -6,11 +6,11 @@ import (
 	"hackathon-backend/dao"
 )
 
-func UserRegisterUseCase(name string, email string, password string) error {
+func UserRegisterUseCase(userName string, email string, password string) error {
 	// IDを生成
 	entropy := ulid.Monotonic(rand.Reader, 0)
-	id := ulid.MustNew(ulid.Now(), entropy).String()
+	userId := ulid.MustNew(ulid.Now(), entropy).String()
 
-	err := dao.UserRegisterDao(id, name, email, password)
+	err := dao.UserRegisterDao(userId, userName, email, password)
 	return err
 }

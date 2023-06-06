@@ -30,7 +30,7 @@ func UserSearchDao() ([]model.AppUser, error) {
 	return users, nil
 }
 
-func UserRegisterDao(id string, name string, email string, password string) error {
+func UserRegisterDao(userId string, userName string, email string, password string) error {
 	duplicateCheckStmt, err := db.Prepare("SELECT COUNT(*) FROM appUser WHERE userId = ? OR userName = ? OR email = ? OR password = ?")
 	if err != nil {
 		log.Printf("fail: db.Prepare (duplicateCheckStmt), %v\n", err)
@@ -39,7 +39,7 @@ func UserRegisterDao(id string, name string, email string, password string) erro
 	defer duplicateCheckStmt.Close()
 
 	var count int
-	err = duplicateCheckStmt.QueryRow(id, name, email, password).Scan(&count)
+	err = duplicateCheckStmt.QueryRow(userId, userName, email, password).Scan(&count)
 	if err != nil {
 		log.Printf("fail: duplicateCheckStmt.QueryRow, %v\n", err)
 		return err
@@ -59,7 +59,7 @@ func UserRegisterDao(id string, name string, email string, password string) erro
 	defer stmt.Close()
 
 	// データをデータベースに挿入
-	_, err = stmt.Exec(id, name, email, password)
+	_, err = stmt.Exec(userId, userName, email, password)
 	if err != nil {
 		log.Printf("fail: stmt.Exec, %v\n", err)
 		return err
