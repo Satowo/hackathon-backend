@@ -6,28 +6,38 @@ import (
 	"log"
 )
 
-func UserSearchDao() ([]model.AppUser, error) {
-	rows, err := db.Query("SELECT * FROM appUser")
+func UserInfoDao(email string) (model.UserInfo, error) {
+	var userInfo model.UserInfo
+	err := db.QueryRow(`SELECT userId, userName FROM appUser WHERE email = ?`, email).Scan(&userInfo.UserId, &userInfo.UserName)
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
-		return nil, err
+		return userInfo, err
 	}
 
-	users := make([]model.AppUser, 0)
+	rows, err := db.Query("SELECT channelId FROM channelMember INNER JOIN appUser ON channelMember.userId = appUser.userId WHERE email = ?", email)
+	if err != nil {
+		log.Printf("fail: db.Query, %v\n", err)
+		return userInfo, err
+	}
+
+	var channels []string
 	for rows.Next() {
-		var u model.AppUser
-		if err := rows.Scan(&u.UserId, &u.UserName, &u.Email, &u.Password); err != nil {
+		var u string
+		if err := rows.Scan(&u); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 
 			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
 				log.Printf("fail: rows.Close(), %v\n", err)
 			}
-			return nil, err
+			return userInfo, err
 		}
-		users = append(users, u)
+		channels = append(channels, u)
 	}
 
-	return users, nil
+	userInfo.InChannels = channels
+	userInfo.Email = email
+
+	return userInfo, nil
 }
 
 func UserRegisterDao(userId string, userName string, email string, password string) error {

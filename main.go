@@ -26,7 +26,7 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodOptions:
 		w.Header()
 	case http.MethodGet:
-		controller.UserSearchController(w)
+		controller.UserInfoController(w, r)
 
 	case http.MethodPost:
 		controller.UserRegisterController(w, r)

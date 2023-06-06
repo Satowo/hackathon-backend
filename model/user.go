@@ -7,6 +7,13 @@ type AppUser struct {
 	Password string
 }
 
+type UserInfo struct {
+	UserId     string
+	UserName   string
+	Email      string
+	InChannels []string
+}
+
 type Reply struct {
 	ReplyId      string
 	MessageId    string

@@ -8,8 +8,8 @@ import (
 )
 
 type ChannelResForHTTPGet struct {
-	ChannelId   string `json:"id"`
-	ChannelName string `json:"name"`
+	ChannelId   string `json:"channelId"`
+	ChannelName string `json:"channelName"`
 }
 
 func ChannelSearchController(w http.ResponseWriter, r *http.Request) {

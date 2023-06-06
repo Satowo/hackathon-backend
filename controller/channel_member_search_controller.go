@@ -8,10 +8,10 @@ import (
 )
 
 type ChannelMemberResForHTTPGet struct {
-	UserId   string `json:"id"`
-	UserName string `json:"name"`
+	UserId   string `json:"userId"`
+	UserName string `json:"userName"`
 	Email    string `json:"email"`
-	Password string `json:"pwd"`
+	Password string `json:"password"`
 }
 
 func ChannelMemberSearchController(w http.ResponseWriter, r *http.Request) {
@@ -31,9 +31,9 @@ func ChannelMemberSearchController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//レスポンス用のUserResForHTTPGetのリスト型に変換
-	membersRes := make([]UserResForHTTPGet, 0)
+	membersRes := make([]ChannelMemberResForHTTPGet, 0)
 	for _, u := range members {
-		membersRes = append(membersRes, UserResForHTTPGet{
+		membersRes = append(membersRes, ChannelMemberResForHTTPGet{
 			UserId:   u.UserId,
 			UserName: u.UserName,
 			Email:    u.Email,
