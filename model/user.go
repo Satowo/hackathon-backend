@@ -8,10 +8,10 @@ type AppUser struct {
 }
 
 type UserInfo struct {
-	UserId     string
-	UserName   string
-	Email      string
-	InChannels []string
+	UserId   string
+	UserName string
+	Email    string
+	Channels []Channel
 }
 
 type Reply struct {
