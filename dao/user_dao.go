@@ -15,7 +15,7 @@ func UserInfoDao(email string) (model.UserInfo, error) {
 	}
 
 	// 最初のクエリを実行して複数の channelId を取得
-	rows, err := db.Query("SELECT channelId FROM channelMember INNER JOIN appUser ON channelMember.userId = appUser.userId WHERE appUser.email = ?", "satoshi@gmail.com")
+	rows, err := db.Query("SELECT channelId FROM channelMember INNER JOIN appUser ON channelMember.userId = appUser.userId WHERE appUser.email = ?", email)
 	if err != nil {
 		log.Fatal(err)
 	}
