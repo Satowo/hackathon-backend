@@ -21,27 +21,25 @@ func UserInfoDao(email string) (model.UserInfo, error) {
 	}
 	defer rows.Close()
 
-	var channelsName []string
+	var channels []model.Channel
 	for rows.Next() {
-		var channelId string
-		err := rows.Scan(&channelId)
+		var u model.Channel
+		err := rows.Scan(&u.ChannelId)
 		if err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			return userInfo, err
 		}
 
 		// 2番目のクエリを実行して channelId に対応する channelName を取得
-		var channelName string
-		err = db.QueryRow("SELECT channelName FROM channel WHERE channelId = ?", channelId).Scan(&channelName)
+		err = db.QueryRow("SELECT channelName FROM channel WHERE channelId = ?", u.ChannelId).Scan(&u.ChannelName)
 		if err != nil {
 			log.Printf("fail: db.QueryRow, %v\n", err)
 			return userInfo, err
 		}
 
-		channelsName = append(channelsName, channelName)
+		channels = append(channels, u)
 	}
-
-	userInfo.InChannels = channelsName
+	userInfo.Channels = channels
 	userInfo.Email = email
 
 	return userInfo, nil

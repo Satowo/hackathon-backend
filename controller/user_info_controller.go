@@ -7,11 +7,16 @@ import (
 	"net/http"
 )
 
+type Channel struct {
+	ChannelId   string
+	ChannelName string
+}
+
 type UserInfoResForHTTPGet struct {
-	UserId     string   `json:"userId"`
-	UserName   string   `json:"userName"`
-	Email      string   `json:"email"`
-	InChannels []string `json:"inChannels"`
+	UserId   string    `json:"userId"`
+	UserName string    `json:"userName"`
+	Email    string    `json:"email"`
+	Channels []Channel `json:"channels"`
 }
 
 func UserInfoController(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +39,14 @@ func UserInfoController(w http.ResponseWriter, r *http.Request) {
 	userInfoRes.UserId = userInfo.UserId
 	userInfoRes.UserName = userInfo.UserName
 	userInfoRes.Email = userInfo.Email
-	userInfoRes.InChannels = userInfo.InChannels
+
+	userInfoRes.Channels = make([]Channel, 0)
+	for _, u := range userInfo.Channels {
+		userInfoRes.Channels = append(userInfoRes.Channels, Channel{
+			ChannelId:   u.ChannelId,
+			ChannelName: u.ChannelName,
+		})
+	}
 
 	bytes, err := json.Marshal(userInfoRes)
 	if err != nil {
