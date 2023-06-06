@@ -26,7 +26,7 @@ func MessageEditController(w http.ResponseWriter, r *http.Request) {
 
 	//MessageContentが空文字か500字以上の時エラーコード400を返す
 	if data.MessageContent == "" || utf8.RuneCountInString(data.MessageContent) > 500 {
-		log.Printf("fail: invalidinput")
+		log.Printf("fail: invalIdInput")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
