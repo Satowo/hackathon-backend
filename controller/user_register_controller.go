@@ -8,7 +8,7 @@ import (
 	"unicode/utf8"
 )
 
-type UserResForHTTPPost struct {
+type UserRequestForHTTPPost struct {
 	UserName string `json:"userName"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -16,7 +16,7 @@ type UserResForHTTPPost struct {
 
 func UserRegisterController(w http.ResponseWriter, r *http.Request) {
 	// リクエストのボディを読み込み
-	var data UserResForHTTPPost
+	var data UserRequestForHTTPPost
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		log.Printf("fail: json.NewDecoder(r.Body).Decode, %v\n", err)
