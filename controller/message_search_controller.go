@@ -9,6 +9,7 @@ import (
 
 type MessageResForHTTPGet struct {
 	MessageId      string `json:"messageId"`
+	UserId         string `json:"userId"`
 	UserName       string `json:"userName"`
 	ChannelId      string `json:"channelId"`
 	MessageContent string `json:"messageContent"`
@@ -35,6 +36,7 @@ func MessageSearchController(w http.ResponseWriter, r *http.Request) {
 	for _, u := range messages {
 		messagesRes = append(messagesRes, MessageResForHTTPGet{
 			MessageId:      u.MessageId,
+			UserId:         u.UserId,
 			UserName:       u.UserName,
 			ChannelId:      u.ChannelId,
 			MessageContent: u.MessageContent,
