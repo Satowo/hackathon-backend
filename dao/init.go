@@ -52,5 +52,3 @@ func DataBaseClose() error {
 	err := db.Close()
 	return err
 }
-
-//

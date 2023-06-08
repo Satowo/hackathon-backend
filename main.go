@@ -44,7 +44,7 @@ func channelHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodOptions:
 		w.Header()
 	case http.MethodGet:
-		controller.ChannelSearchController(w, r)
+		controller.ChannelSearchController(w)
 
 	//case http.MethodPost:
 
@@ -63,7 +63,8 @@ func channelMemberHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodGet:
 		controller.ChannelMemberSearchController(w, r)
 
-	//case http.MethodPost:
+	case http.MethodPost:
+		controller.ChannelJoinController(w, r)
 
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)

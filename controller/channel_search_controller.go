@@ -12,7 +12,7 @@ type ChannelResForHTTPGet struct {
 	ChannelName string `json:"channelName"`
 }
 
-func ChannelSearchController(w http.ResponseWriter, r *http.Request) {
+func ChannelSearchController(w http.ResponseWriter) {
 	channels, err := usecase.ChannelSearchUseCase()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
