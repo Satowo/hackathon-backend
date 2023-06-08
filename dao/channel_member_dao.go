@@ -8,7 +8,7 @@ import (
 
 func ChannelMemberSearchDao(channelId string) ([]model.AppUser, error) {
 	//取得したクエリパラメータとchannel_idが一致するカラムのuser_idを取得
-	rows, err := db.Query("SELECT app_user.user_id, user_name, email, password FROM app_user INNER JOIN channel_member ON app_user.user_id = channel_member.user_id WHERE channel_id = ?", channelId)
+	rows, err := db.Query("SELECT appUser.userId, userName, email, password FROM appUser INNER JOIN channelMember ON appUser.userId = channelMember.userId WHERE channelId = ?", channelId)
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
 		return nil, err

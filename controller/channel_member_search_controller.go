@@ -16,9 +16,9 @@ type ChannelMemberResForHTTPGet struct {
 
 func ChannelMemberSearchController(w http.ResponseWriter, r *http.Request) {
 	//クエリパラメータの文字列を取得、空文字の場合エラーコード400を返す
-	channelId := r.URL.Query().Get("channel_id")
+	channelId := r.URL.Query().Get("channelId")
 	if channelId == "" {
-		log.Println("fail: channel_id is empty")
+		log.Println("fail: channelId is empty")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -49,7 +49,6 @@ func ChannelMemberSearchController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(bytes)
 }
