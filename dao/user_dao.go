@@ -10,14 +10,15 @@ func UserInfoDao(email string) (model.UserInfo, error) {
 	var userInfo model.UserInfo
 	err := db.QueryRow(`SELECT userId, userName FROM appUser WHERE email = ?`, email).Scan(&userInfo.UserId, &userInfo.UserName)
 	if err != nil {
-		log.Printf("fail: db.Query, %v\n", err)
+		log.Printf("fail: db.QueryRow, %v\n", err)
 		return userInfo, err
 	}
 
 	// 最初のクエリを実行して複数の channelId を取得
 	rows, err := db.Query("SELECT channelId FROM channelMember INNER JOIN appUser ON channelMember.userId = appUser.userId WHERE appUser.email = ?", email)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("fail: db.Query, %v\n", err)
+		return userInfo, err
 	}
 	defer rows.Close()
 
@@ -33,7 +34,7 @@ func UserInfoDao(email string) (model.UserInfo, error) {
 		// 2番目のクエリを実行して channelId に対応する channelName を取得
 		err = db.QueryRow("SELECT channelName FROM channel WHERE channelId = ?", u.ChannelId).Scan(&u.ChannelName)
 		if err != nil {
-			log.Printf("fail: db.QueryRow, %v\n", err)
+			log.Printf("fail: db.QueryRow-2, %v\n", err)
 			return userInfo, err
 		}
 

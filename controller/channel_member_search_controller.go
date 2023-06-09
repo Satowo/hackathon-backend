@@ -49,6 +49,6 @@ func ChannelMemberSearchController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	w.Write(bytes)
 }
