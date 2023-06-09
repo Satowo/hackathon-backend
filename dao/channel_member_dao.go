@@ -35,7 +35,7 @@ func ChannelJoinDao(Id string, channelId string, userId string) (model.UserInfo,
 	var userInfo model.UserInfo
 
 	//重複レコードがないか確認
-	duplicateCheckStmt, err := db.Prepare("SELECT COUNT(*) FROM channelMember WHERE userId = ?")
+	duplicateCheckStmt, err := db.Prepare("SELECT COUNT(*) FROM channelMember WHERE channelId = ? AND userId = ?")
 	if err != nil {
 		log.Printf("fail: db.Prepare (duplicateCheckStmt), %v\n", err)
 		return userInfo, err
@@ -43,7 +43,7 @@ func ChannelJoinDao(Id string, channelId string, userId string) (model.UserInfo,
 	defer duplicateCheckStmt.Close()
 
 	var count int
-	err = duplicateCheckStmt.QueryRow(userId).Scan(&count)
+	err = duplicateCheckStmt.QueryRow(channelId, userId).Scan(&count)
 	if err != nil {
 		log.Printf("fail: duplicateCheckStmt.QueryRow, %v\n", err)
 		return userInfo, err
@@ -109,7 +109,7 @@ func ChannelLeaveDao(Id string, channelId string, userId string) (model.UserInfo
 	}
 
 	// データがテーブルの構造に一致しているか確認
-	stmt, err := db.Prepare("DELETE FROM channelMember WHERE userId = ?")
+	stmt, err := db.Prepare("DELETE FROM channelMember WHERE userId = ? AND channelId = ?")
 	if err != nil {
 		log.Printf("fail: db.Prepare (Stmt), %v\n", err)
 		return userInfo, err
@@ -117,7 +117,7 @@ func ChannelLeaveDao(Id string, channelId string, userId string) (model.UserInfo
 	defer stmt.Close()
 
 	// データをデータベースに反映
-	_, err = stmt.Exec(userId)
+	_, err = stmt.Exec(userId, channelId)
 	if err != nil {
 		log.Printf("fail: stmt.Exec, %v\n", err)
 		return userInfo, err

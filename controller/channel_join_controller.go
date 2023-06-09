@@ -29,6 +29,7 @@ func ChannelJoinController(w http.ResponseWriter, r *http.Request) {
 	// データをデータベースに挿入しそれを含んだ全userのnameとageを返す
 	userInfo, err := usecase.ChannelJoinUseCase(channelId, userId)
 	if err != nil {
+		log.Printf("fail: ChannelJoinUseCase(channelJoin), %v\n", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
