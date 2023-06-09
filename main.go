@@ -12,8 +12,8 @@ import (
 )
 
 func headerSet(w http.ResponseWriter) {
-	/*w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")*/
 	w.Header().Set("Access-Control-Allow-Origin", "https://hackathon-frontend-eight.vercel.app")
+	/*w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")*/
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
@@ -65,6 +65,23 @@ func channelMemberHandler(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodPost:
 		controller.ChannelJoinController(w, r)
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
+func channelLeaveHandler(w http.ResponseWriter, r *http.Request) {
+	headerSet(w)
+	switch r.Method {
+	case http.MethodOptions:
+		w.Header()
+	/*case http.MethodGet:*/
+
+	case http.MethodPost:
+		controller.ChannelLeaveController(w, r)
 
 	default:
 		log.Printf("fail: HTTP Method is %s\n", r.Method)
@@ -132,9 +149,10 @@ func main() {
 	http.HandleFunc("/user", userHandler)
 	http.HandleFunc("/channel", channelHandler)
 	http.HandleFunc("/message", MessageHandler)
-	http.HandleFunc("/message_edit", MessageEditHandler)
-	http.HandleFunc("/message_delete", MessageDeleteHandler)
-	http.HandleFunc("/channel_member", channelMemberHandler)
+	http.HandleFunc("/messageEdit", MessageEditHandler)
+	http.HandleFunc("/messageDelete", MessageDeleteHandler)
+	http.HandleFunc("/channelMember", channelMemberHandler)
+	http.HandleFunc("/channelLeave", channelLeaveHandler)
 
 	// ③ Ctrl+CでHTTPサーバー停止時にDBをクローズする
 	closeDBWithSysCall()
