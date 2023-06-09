@@ -14,15 +14,18 @@ func UserInfoDao(email string) (model.UserInfo, error) {
 		return userInfo, err
 	}
 
+	var channels []model.Channel
 	// 最初のクエリを実行して複数の channelId を取得
 	rows, err := db.Query("SELECT channelId FROM channelMember INNER JOIN appUser ON channelMember.userId = appUser.userId WHERE appUser.email = ?", email)
 	if err != nil {
 		log.Printf("fail: db.Query, %v\n", err)
-		return userInfo, err
+		//チャンネルidが取得できなかった場合、channelはからのリストを返す
+		userInfo.Channels = channels
+		userInfo.Email = email
+		return userInfo, nil
 	}
 	defer rows.Close()
 
-	var channels []model.Channel
 	for rows.Next() {
 		var u model.Channel
 		err := rows.Scan(&u.ChannelId)
