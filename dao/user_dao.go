@@ -6,6 +6,34 @@ import (
 	"log"
 )
 
+func AllUsersNameDao() ([]string, error) {
+	var allUsersName []string
+	rows, err := db.Query(`SELECT userName FROM appUser`)
+	if err != nil {
+		log.Printf("fail: db.Query, %v\n", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var u string
+		err := rows.Scan(&u)
+		if err != nil {
+			log.Printf("fail: rows.Scan, %v\n", err)
+			return nil, err
+		}
+		allUsersName = append(allUsersName, u)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		log.Printf("fail: rows.Err(), %v\n", err)
+		return nil, err
+	}
+
+	return allUsersName, nil
+}
+
 func UserInfoDao(email string) (model.UserInfo, error) {
 	var userInfo model.UserInfo
 	err := db.QueryRow(`SELECT userId, userName FROM appUser WHERE email = ?`, email).Scan(&userInfo.UserId, &userInfo.UserName)
@@ -49,11 +77,12 @@ func UserInfoDao(email string) (model.UserInfo, error) {
 	return userInfo, nil
 }
 
-func UserRegisterDao(userId string, userName string, email string, password string) error {
+func UserRegisterDao(userId string, userName string, email string, password string) (model.UserInfo, error) {
+	var userInfo model.UserInfo
 	duplicateCheckStmt, err := db.Prepare("SELECT COUNT(*) FROM appUser WHERE userId = ? OR userName = ? OR email = ? OR password = ?")
 	if err != nil {
 		log.Printf("fail: db.Prepare (duplicateCheckStmt), %v\n", err)
-		return err
+		return userInfo, err
 	}
 	defer duplicateCheckStmt.Close()
 
@@ -61,19 +90,19 @@ func UserRegisterDao(userId string, userName string, email string, password stri
 	err = duplicateCheckStmt.QueryRow(userId, userName, email, password).Scan(&count)
 	if err != nil {
 		log.Printf("fail: duplicateCheckStmt.QueryRow, %v\n", err)
-		return err
+		return userInfo, err
 	}
 
 	// 重複レコードが存在する場合にエラーを返す
 	if count > 0 {
-		return errors.New("duplicate record found")
+		return userInfo, errors.New("duplicate record found")
 	}
 
 	// データがテーブルの構造に一致しているか確認
 	stmt, err := db.Prepare("INSERT INTO appUser (userId, userName, email, password) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		log.Printf("fail: db.Prepare (Stmt), %v\n", err)
-		return err
+		return userInfo, err
 	}
 	defer stmt.Close()
 
@@ -81,8 +110,13 @@ func UserRegisterDao(userId string, userName string, email string, password stri
 	_, err = stmt.Exec(userId, userName, email, password)
 	if err != nil {
 		log.Printf("fail: stmt.Exec, %v\n", err)
-		return err
+		return userInfo, err
 	}
 
-	return nil
+	userInfo.UserId = userId
+	userInfo.UserName = userName
+	userInfo.Email = email
+	userInfo.Channels = []model.Channel{}
+
+	return userInfo, nil
 }

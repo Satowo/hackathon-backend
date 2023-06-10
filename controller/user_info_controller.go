@@ -58,3 +58,21 @@ func UserInfoController(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(bytes)
 }
+
+func AllUsersNameController(w http.ResponseWriter) {
+	allUsersName, err := usecase.AllUsersNameUseCase()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	bytes, err := json.Marshal(allUsersName)
+	if err != nil {
+		log.Printf("fail: json.Marshal, %v\n", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(bytes)
+}

@@ -38,6 +38,23 @@ func userHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func allUsersNameHandler(w http.ResponseWriter, r *http.Request) {
+	headerSet(w)
+	switch r.Method {
+	case http.MethodOptions:
+		w.Header()
+	case http.MethodGet:
+		controller.AllUsersNameController(w)
+
+		/*case http.MethodPost:*/
+
+	default:
+		log.Printf("fail: HTTP Method is %s\n", r.Method)
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+}
+
 func channelHandler(w http.ResponseWriter, r *http.Request) {
 	headerSet(w)
 	switch r.Method {
@@ -147,6 +164,7 @@ func MessageDeleteHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// /userでsign upまたはsigh inのどちらかのリクエストを受け取る
 	http.HandleFunc("/user", userHandler)
+	http.HandleFunc("/allUsers", allUsersNameHandler)
 	http.HandleFunc("/channel", channelHandler)
 	http.HandleFunc("/message", MessageHandler)
 	http.HandleFunc("/messageEdit", MessageEditHandler)
